@@ -99,9 +99,9 @@ function render(){
   document.getElementById("draft").textContent=
 `${cur} counter, week of Oct 26
 
-Your on-shelf rate was ${rate}% last month. Customers asked for ${miss} parts we did not have on the shelf.
+Your on-shelf rate was ${rate}% over the last 4 weeks. Customers asked for ${miss} parts we did not have on the shelf.
 
-Arriving Thursday from the warehouse:
+Suggested from the warehouse:
 ${adds.map(x=>"• "+x.p+": "+(x.rec-x.onh)).join("\n")}
 
 Please log every part a customer asks for that is not on the shelf. That list sets next week's order.`;

@@ -89,7 +89,7 @@
     </section>
   </aside>
 </main>
-<footer>All dealers, consultants and figures on this page are invented for illustration. Built to show how field-visit data could be turned into program proof for an OEM partner. Concept and build by Aishwarya Murali, <a href="https://aishwaryamurali.com" style="color:inherit">aishwaryamurali.com</a>.</footer>
+<footer>All dealers, consultants and figures on this page are invented for illustration. Built to show how field-visit data could be turned into program proof for a manufacturer partner. Concept and build by Aishwarya Murali, <a href="https://aishwaryamurali.com" style="color:inherit">aishwaryamurali.com</a>.</footer>
 <script>
 let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
 const PROGRAMS=["Mopar Express Lane","Mopar Fleet","Wholesale Parts"];
@@ -124,7 +124,7 @@ function render(){
       svg+=`<rect x="${cx+o}" y="${190-h}" width="28" height="${h}" rx="3" fill="${c}"/><text x="${cx+o+14}" y="${184-h}" font-size="11" text-anchor="middle" fill="#353535" font-family="Montserrat">$${v}K</text>`});
     svg+=`<text x="${cx}" y="208" font-size="12" text-anchor="middle" fill="#797979" font-family="Montserrat">${x.m}</text>`});
   document.getElementById("chart").innerHTML=svg;
-  document.getElementById("rows").innerHTML=d.slice(0,8).map((x,i)=>`<tr class="row ${sel===i?"sel":""}" data-i="${i}"><td>${x.name}</td><td>${x.reg}</td><td>${x.cons}</td><td>${x.visits}</td><td class="${x.change>=0?"up":"dn"}">${fmt(x.change)}</td><td class="${x.change-x.peer>=0?"up":"dn"}">${fmt(x.change-x.peer)}</td></tr>`).join("");
+  document.getElementById("rows").innerHTML=d.map((x,i)=>`<tr class="row ${sel===i?"sel":""}" data-i="${i}"><td>${x.name}</td><td>${x.reg}</td><td>${x.cons}</td><td>${x.visits}</td><td class="${x.change>=0?"up":"dn"}">${fmt(x.change)}</td><td class="${x.change-x.peer>=0?"up":"dn"}">${fmt(x.change-x.peer)}</td></tr>`).join("");
   document.querySelectorAll("tr.row").forEach(r=>r.onclick=()=>{sel=+r.dataset.i;render();draft()});
 }
 function draft(){
