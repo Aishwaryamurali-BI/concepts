@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Counter Restock Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#171923;--mute:#5c5c5c;--line:#e2e8f0;--bg:#f5f5f5;--yellow:#ffea00;--blue:#2635d9;--red:#d92626;--ok:#1f8a4c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,Arial,sans-serif}
+  header{background:#fff;border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:18px}
+  header img{height:22px}
+  header .t{font:800 16px Inter;letter-spacing:-.01em}
+  header .tag{margin-left:auto;font-size:11px;color:var(--blue);background:rgba(38,53,217,.08);border-radius:20px;padding:4px 10px}
+  .band{background:var(--ink);color:#fff;padding:16px 28px}
+  .band .in{max-width:1280px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .band span{font-size:12px;color:#c9cbd3;margin-right:4px}
+  .pill{border:1px solid #3a3d4a;background:transparent;color:#fff;border-radius:6px;padding:7px 12px;font:600 13px Inter;cursor:pointer}
+  .pill.on{background:var(--yellow);color:#000;border-color:var(--yellow)}
+  main{padding:22px 28px;display:grid;grid-template-columns:1fr 350px;gap:20px;max-width:1280px;margin:0 auto}
+  .kpis{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .kpi .l{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .kpi .v{font:800 26px Inter;margin-top:4px;letter-spacing:-.02em}
+  .kpi .s{font-size:12px;color:var(--mute)}
+  .kpi.hl{border-left:5px solid var(--yellow)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  h2{font:700 15px Inter;margin:0 0 10px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-weight:600;color:var(--mute);font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line);padding:8px 6px}
+  td{padding:9px 6px;border-bottom:1px solid #eef1f5}
+  .tag2{font-size:11px;font-weight:700;border-radius:4px;padding:2px 7px}
+  .add{background:var(--yellow);color:#000}.keep{background:#eef1f5;color:var(--mute)}.cut{background:#fde8e8;color:var(--red)}
+  .miss{display:flex;justify-content:space-between;border-bottom:1px solid #eef1f5;padding:7px 0;font-size:13px}
+  .miss b{font-weight:700}
+  .side{display:flex;flex-direction:column;gap:20px}
+  .draft{font-size:13px;white-space:pre-wrap;background:#fafafa;border:1px solid var(--line);border-radius:8px;padding:12px;min-height:170px}
+  .btns{display:flex;gap:8px;margin-top:12px}
+  .btn{border:0;border-radius:6px;padding:9px 14px;font:700 13px Inter;cursor:pointer}
+  .btn.p{background:var(--blue);color:#fff}.btn.g{background:#eef1f5;color:var(--ink)}
+  .status{font-size:12px;margin-top:10px;color:var(--mute)} .status b{color:var(--ink)}
+  .note{font-size:12px;color:var(--mute)}
+  footer{max-width:1280px;margin:0 auto;padding:0 28px 24px;font-size:11px;color:var(--mute)}
+  @media (max-width:900px){main{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <img src="assets/autoshack_logo.svg" alt="AutoShack">
+  <div class="t">Counter Restock Desk</div>
+  <div class="tag">Concept prototype by Aishwarya Murali · sample data only</div>
+</header>
+<div class="band"><div class="in"><span>Counter</span><div id="ctrs" style="display:flex;gap:6px;flex-wrap:wrap"></div><span style="margin-left:auto">Week of Oct 26, 2026</span></div></div>
+<main>
+  <div class="kpis" id="kpis"></div>
+  <section class="card">
+    <h2>What this counter should stock next week</h2>
+    <table><thead><tr><th>Part</th><th>Sold, last 4 weeks</th><th>Asked for, not on shelf</th><th>On hand</th><th>Recommended</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table>
+    <div class="note" style="margin-top:10px">Recommended = expected 2-week demand from counter sales and missed asks, plus a safety buffer, rounded to case size.</div>
+  </section>
+  <aside class="side">
+    <section class="card">
+      <h2>Restock note, drafted for the counter lead</h2>
+      <div class="draft" id="draft"></div>
+      <div class="btns"><button class="btn p" id="approve">Approve transfer</button><button class="btn g" id="edit">Edit</button></div>
+      <div class="status" id="status">Nothing moves until a planner approves it.</div>
+    </section>
+    <section class="card">
+      <h2>Most asked for, not on shelf</h2>
+      <div id="miss"></div>
+    </section>
+  </aside>
+</main>
+<footer>All counters, parts and figures on this page are invented for illustration. Built to show how counter sales and missed asks could set each counter's weekly restock. Concept and build by Aishwarya Murali, <a href="https://aishwaryamurali.com" style="color:inherit">aishwaryamurali.com</a>.</footer>
+<script>
+let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+const CTRS=["Golden Mile","Maple","Whitby","Hamilton","London","Windsor","East Gwillimbury","Ottawa"];
+const PARTS=["Front brake rotors, coated","Rear brake rotors, coated","Ceramic brake pads, front","Ceramic brake pads, rear","Front struts, complete","Rear shocks","Wheel hub bearings","Brake hardware kits","Sway bar links","Brake fluid, DOT 3"];
+const data={};
+const W=[1.6,1.3,1.4,1.1,0.9,0.8,0.6,0.7,0.5,0.4];
+CTRS.forEach(c=>{data[c]=PARTS.map((p,i)=>{const sold=Math.round((8+rnd()*22)*W[i]),miss=Math.round(rnd()*rnd()*14),onh=Math.round(rnd()*22);
+  const need=Math.max(0,Math.ceil(((sold+miss)/4*2*1.25)/2)*2);return {p,sold,miss,onh,rec:need}}).sort((a,b)=>(b.sold+b.miss)-(a.sold+a.miss))});
+let cur=CTRS[0];
+function render(){
+  document.getElementById("ctrs").innerHTML=CTRS.map(c=>`<button class="pill ${c===cur?"on":""}" data-c="${c}">${c}</button>`).join("");
+  document.querySelectorAll("#ctrs .pill").forEach(b=>b.onclick=()=>{cur=b.dataset.c;render()});
+  const d=data[cur],sold=d.reduce((s,x)=>s+x.sold,0),miss=d.reduce((s,x)=>s+x.miss,0);
+  const req=sold+miss,rate=Math.round(sold/req*100),orders=Math.round(miss*0.4);
+  document.getElementById("kpis").innerHTML=[
+    ["Parts sold",sold,"last 4 weeks"],["Asked for, not on shelf",miss,"logged at the counter"],
+    ["On-shelf rate",rate+"%","of parts customers asked for",1],["Saved by in-store order",orders,"shipped from the warehouse for pickup"]
+  ].map(k=>`<div class="kpi ${k[3]?"hl":""}"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("");
+  document.getElementById("rows").innerHTML=d.map(x=>{const a=x.rec>x.onh?["add","Add "+(x.rec-x.onh)]:x.onh>x.rec*1.8&&x.onh>6?["cut","Reduce"]:["keep","Hold"];
+    return `<tr><td>${x.p}</td><td>${x.sold}</td><td>${x.miss}</td><td>${x.onh}</td><td>${x.rec}</td><td><span class="tag2 ${a[0]}">${a[1]}</span></td></tr>`}).join("");
+  document.getElementById("miss").innerHTML=[...d].sort((a,b)=>b.miss-a.miss).slice(0,5).map(x=>`<div class="miss"><span>${x.p}</span><b>${x.miss}</b></div>`).join("");
+  const adds=d.filter(x=>x.rec>x.onh).slice(0,4);
+  document.getElementById("draft").textContent=
+`${cur} counter, week of Oct 26
+
+Your on-shelf rate was ${rate}% last month. Customers asked for ${miss} parts we did not have on the shelf.
+
+Arriving Thursday from the warehouse:
+${adds.map(x=>"• "+x.p+": "+(x.rec-x.onh)).join("\n")}
+
+Please log every part a customer asks for that is not on the shelf. That list sets next week's order.`;
+  document.getElementById("status").innerHTML="Status: <b>waiting for planner approval</b>";
+}
+document.getElementById("approve").onclick=()=>{document.getElementById("status").innerHTML="Status: <b>transfer request created</b> (simulated)"};
+document.getElementById("edit").onclick=()=>{const e=document.getElementById("draft");e.contentEditable=true;e.focus()};
+render();
+</script>
+</body>
+</html>

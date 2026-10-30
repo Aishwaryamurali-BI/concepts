@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Program Impact Desk</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a1a; --ink2:#353535; --mute:#797979; --line:#e6e6e8; --bg:#f6f6f7; --card:#fff;
+    --cyan:#2bb6e6; --green:#8cc63f; --orange:#f7931e; --red:#e3263b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Montserrat,Arial,sans-serif}
+  header{background:var(--ink);color:#fff;padding:14px 28px;display:flex;align-items:center;gap:18px}
+  header img{height:22px;filter:brightness(0) invert(1)}
+  header .t{font:500 16px Poppins,sans-serif;letter-spacing:.02em}
+  header .tag{margin-left:auto;font-size:11px;color:#bdbdbd;border:1px solid #4a4a4a;border-radius:20px;padding:4px 10px}
+  .stripe{height:4px;background:linear-gradient(90deg,var(--cyan) 0 25%,var(--green) 25% 50%,var(--orange) 50% 75%,var(--red) 75%)}
+  main{padding:22px 28px;display:grid;grid-template-columns:1fr 340px;gap:20px;max-width:1280px;margin:0 auto}
+  .bar{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .bar span{font-size:12px;color:var(--mute);margin-right:4px}
+  .pill{border:1px solid var(--line);background:#fff;border-radius:20px;padding:7px 14px;font:500 13px Poppins,sans-serif;cursor:pointer;color:var(--ink2)}
+  .pill.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .kpis{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .kpi .l{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+  .kpi .v{font:600 26px Poppins,sans-serif;margin-top:4px}
+  .kpi .s{font-size:12px;color:var(--mute)}
+  .kpi.hl{border-top:3px solid var(--cyan)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  h2{font:500 15px Poppins,sans-serif;margin:0 0 10px}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--mute);margin-bottom:6px}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-weight:500;color:var(--mute);font-size:11px;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line);padding:8px 6px}
+  td{padding:9px 6px;border-bottom:1px solid #f0f0f2}
+  tr.row{cursor:pointer} tr.row:hover td{background:#fafafa} tr.sel td{background:#eef9fd}
+  .up{color:#4f8a10;font-weight:600} .dn{color:var(--red);font-weight:600}
+  .side{display:flex;flex-direction:column;gap:20px}
+  .draft{font-size:13px;white-space:pre-wrap;background:#fafafa;border:1px solid var(--line);border-radius:8px;padding:12px;min-height:180px}
+  .src{font-size:11px;color:var(--mute);margin-top:8px}
+  .btns{display:flex;gap:8px;margin-top:12px}
+  .btn{border:0;border-radius:6px;padding:9px 14px;font:500 13px Poppins,sans-serif;cursor:pointer}
+  .btn.p{background:var(--cyan);color:#fff} .btn.g{background:#ececee;color:var(--ink2)}
+  .status{font-size:12px;margin-top:10px;color:var(--mute)}
+  .status b{color:var(--ink)}
+  .note{font-size:12px;color:var(--mute)}
+  footer{max-width:1280px;margin:0 auto;padding:0 28px 24px;font-size:11px;color:var(--mute)}
+  @media (max-width:900px){main{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header>
+  <img src="assets/helm_logo.png" alt="Helm">
+  <div class="t">Program Impact Desk</div>
+  <div class="tag">Concept prototype by Aishwarya Murali · sample data only</div>
+</header>
+<div class="stripe"></div>
+<main>
+  <div class="bar"><span>Program</span><div id="progs" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+    <span style="margin-left:auto">Quarter</span><button class="pill on">Q3 2026</button></div>
+  <div class="kpis" id="kpis"></div>
+  <section class="card">
+    <h2>Program sales per dealer, visited and not visited</h2>
+    <div class="legend"><span><i style="background:var(--cyan)"></i>Dealers with a field visit</span><span><i style="background:#c9c9cd"></i>Similar dealers without a visit</span></div>
+    <svg id="chart" viewBox="0 0 760 220" width="100%" role="img" aria-label="Monthly program sales per dealer"></svg>
+    <h2 style="margin-top:18px">Dealers this quarter <span class="note">(click a row to draft the visit recap)</span></h2>
+    <table><thead><tr><th>Dealer</th><th>Region</th><th>Consultant</th><th>Visits</th><th>Program sales change</th><th>vs. similar dealers</th></tr></thead><tbody id="rows"></tbody></table>
+  </section>
+  <aside class="side">
+    <section class="card">
+      <h2>Visit recap, drafted for the consultant</h2>
+      <div class="draft" id="draft">Select a dealer to draft the recap.</div>
+      <div class="src" id="src"></div>
+      <div class="btns"><button class="btn p" id="approve">Approve and send</button><button class="btn g" id="edit">Edit</button></div>
+      <div class="status" id="status">Nothing is sent until the consultant approves it.</div>
+    </section>
+    <section class="card">
+      <h2>How this runs</h2>
+      <div class="note" style="line-height:1.6">
+        1. Visit logs and dealer program sales load every Monday.<br>
+        2. Each dealer is compared with similar dealers that had no visit.<br>
+        3. AI drafts each recap from the visit notes; every number cites its source row.<br>
+        4. The consultant approves or edits before anything is sent.<br>
+        5. A weekly test set checks the drafts for wrong numbers before each release.
+      </div>
+    </section>
+  </aside>
+</main>
+<footer>All dealers, consultants and figures on this page are invented for illustration. Built to show how field-visit data could be turned into program proof for an OEM partner. Concept and build by Aishwarya Murali, <a href="https://aishwaryamurali.com" style="color:inherit">aishwaryamurali.com</a>.</footer>
+<script>
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+const PROGRAMS=["Mopar Express Lane","Mopar Fleet","Wholesale Parts"];
+const REG=["Great Lakes","Northeast","Southeast","Midwest","West","Mid-Atlantic"];
+const CONS=["J. Ortiz","M. Chen","A. Patel","R. Brooks","L. Nguyen","S. Kowalski"];
+const NAMES=["Lakeside","Riverbend","Northgate","Summit","Harbor","Pinecrest","Westfield","Oak Ridge","Crossroads","Maple Valley","Bayview","Ironwood"];
+const data={};
+PROGRAMS.forEach((p,pi)=>{
+  const dealers=NAMES.map((n,i)=>{const v=1+Math.floor(rnd()*4);const ch=(rnd()*24-4+v*2.2);const base=(rnd()*6-2);
+    return {name:n+" "+["CDJR","Chrysler Dodge Jeep Ram","Jeep Ram"][i%3],reg:REG[i%6],cons:CONS[(i+pi)%6],visits:v,change:ch,peer:base,
+      parts:Math.round(8+rnd()*30),nps:Math.round(40+rnd()*40)}});
+  const months=["Jul","Aug","Sep"].map((m,k)=>({m,v:Math.round(41+pi*6+k*(3.4+rnd()*1.5)),n:Math.round(40+pi*6+k*(0.6+rnd()))}));
+  data[p]={dealers:dealers.sort((a,b)=>(b.change-b.peer)-(a.change-a.peer)),months};
+});
+let cur=PROGRAMS[0],sel=null;
+const fmt=x=>(x>=0?"+":"")+x.toFixed(1)+"%";
+function render(){
+  document.getElementById("progs").innerHTML=PROGRAMS.map(p=>`<button class="pill ${p===cur?"on":""}" data-p="${p}">${p}</button>`).join("");
+  document.querySelectorAll("#progs .pill").forEach(b=>b.onclick=()=>{cur=b.dataset.p;sel=null;render()});
+  const d=data[cur].dealers,avg=a=>a.reduce((s,x)=>s+x,0)/a.length;
+  const lift=avg(d.map(x=>x.change-x.peer));
+  document.getElementById("kpis").innerHTML=[
+    ["Dealers visited",d.length,"this quarter"],
+    ["Visits logged",d.reduce((s,x)=>s+x.visits,0),"with notes attached"],
+    ["Program sales, visited",fmt(avg(d.map(x=>x.change))),"vs. last quarter"],
+    ["Ahead of similar dealers",fmt(lift),"visited vs. not visited",1]
+  ].map(k=>`<div class="kpi ${k[3]?"hl":""}"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join("");
+  const m=data[cur].months,max=Math.max(...m.flatMap(x=>[x.v,x.n]))*1.15;
+  let svg=`<line x1="40" y1="190" x2="740" y2="190" stroke="#e6e6e8"/>`;
+  m.forEach((x,i)=>{const cx=110+i*230;
+    [[x.v,"#2bb6e6",-34],[x.n,"#c9c9cd",6]].forEach(([v,c,o])=>{const h=v/max*170;
+      svg+=`<rect x="${cx+o}" y="${190-h}" width="28" height="${h}" rx="3" fill="${c}"/><text x="${cx+o+14}" y="${184-h}" font-size="11" text-anchor="middle" fill="#353535" font-family="Montserrat">$${v}K</text>`});
+    svg+=`<text x="${cx}" y="208" font-size="12" text-anchor="middle" fill="#797979" font-family="Montserrat">${x.m}</text>`});
+  document.getElementById("chart").innerHTML=svg;
+  document.getElementById("rows").innerHTML=d.slice(0,8).map((x,i)=>`<tr class="row ${sel===i?"sel":""}" data-i="${i}"><td>${x.name}</td><td>${x.reg}</td><td>${x.cons}</td><td>${x.visits}</td><td class="${x.change>=0?"up":"dn"}">${fmt(x.change)}</td><td class="${x.change-x.peer>=0?"up":"dn"}">${fmt(x.change-x.peer)}</td></tr>`).join("");
+  document.querySelectorAll("tr.row").forEach(r=>r.onclick=()=>{sel=+r.dataset.i;render();draft()});
+}
+function draft(){
+  const x=data[cur].dealers[sel];
+  document.getElementById("draft").textContent=
+`Hi ${x.name} team,
+
+Thank you for your time on our ${x.visits} visit${x.visits>1?"s":""} this quarter.
+
+What moved: ${cur} sales are ${fmt(x.change)} against last quarter, ${fmt(x.change-x.peer)} ahead of similar dealers in ${x.reg}.
+
+Next steps we agreed:
+1. Keep the ${x.parts} top parts in stock ahead of the November service push.
+2. Review the program results together at our next visit.
+
+${x.cons}, Helm`;
+  document.getElementById("src").textContent=`Sources: visit log rows ${100+sel*3} to ${102+sel*3}; dealer sales table, ${cur}, Q3 2026.`;
+  document.getElementById("status").innerHTML="Status: <b>waiting for "+x.cons+" to approve</b>";
+}
+document.getElementById("approve").onclick=()=>{if(sel===null)return;document.getElementById("status").innerHTML="Status: <b>approved and queued to send</b> (simulated)"};
+document.getElementById("edit").onclick=()=>{const e=document.getElementById("draft");e.contentEditable=true;e.focus()};
+render();sel=0;render();draft();
+</script>
+</body>
+</html>
